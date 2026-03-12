@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <!-- Contenido scrollable -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -21,8 +22,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Título -->
             <TextView
-                android:text="Mini Agenda"
+                android:text="New Contact"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
@@ -30,8 +32,9 @@
                 android:layout_marginBottom="20dp"
                 android:layout_gravity="center"/>
 
+            <!-- Campo Nombre -->
             <TextView
-                android:text="Nom:"
+                android:text="Name:"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -39,11 +42,13 @@
                 android:id="@+id/etNom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Introduce tu nombre"
                 android:inputType="textPersonName"
                 android:layout_marginBottom="15dp"/>
 
+            <!-- Campo Apellido -->
             <TextView
-                android:text="Cognoms:"
+                android:text="Surnames:"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -51,11 +56,13 @@
                 android:id="@+id/etCognoms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Introduce tus apellidos"
                 android:inputType="textPersonName"
                 android:layout_marginBottom="15dp"/>
 
+            <!-- Campo Teléfono -->
             <TextView
-                android:text="Telèfon:"
+                android:text="Phone number:"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -63,11 +70,13 @@
                 android:id="@+id/etTelefon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Introduce tu número"
                 android:inputType="phone"
                 android:layout_marginBottom="15dp"/>
 
+            <!-- Campo Email -->
             <TextView
-                android:text="Email:"
+                android:text="E-mail:"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -75,17 +84,19 @@
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Introduce tu correo"
                 android:inputType="textEmailAddress"
                 android:layout_marginBottom="15dp"/>
-
         </LinearLayout>
     </ScrollView>
 
+    <!-- Footer con botones Guardar y Cancelar -->
     <LinearLayout
         android:id="@+id/footerBotones"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -95,18 +106,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="GUARDAR"
+            android:text="Save"
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:textColor="@android:color/white"
             android:layout_marginEnd="5dp"/>
 
         <Button
-            android:id="@+id/btnVeureLlista"
+            android:id="@+id/btnCancelar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="VEURE"
-            android:enabled="false"
+            android:text="Cancel"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:textColor="@android:color/white"
             android:layout_marginStart="5dp"/>
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -13,10 +12,12 @@ import java.io.InputStreamReader
 class MainActivity : AppCompatActivity() {
 
     lateinit var listView: ListView
-    lateinit var btnEditar: Button
-    // Guardamos la lista en memoria para saber qué ha pulsado el usuario
-    val contactesList = ArrayList<String>()
-    var itemSeleccionado: Int = -1 // -1 significa que no hay nada seleccionado
+
+    // Lista para mostrar en la UI (Nombre y Apellido)
+    val contactesDisplayList = ArrayList<String>()
+
+    // Lista para almacenar la línea de datos completa (Nom;Cognom;Tel;Email)
+    val contactesDataList = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +25,9 @@ class MainActivity : AppCompatActivity() {
 
         listView = findViewById(R.id.lvContactes)
         val btnNou = findViewById<Button>(R.id.btnNou)
-        btnEditar = findViewById(R.id.btnEditar)
+
+        // NOTA: La lógica del botón 'btnEditar' se ha ELIMINADO de aquí,
+        // ya que el clic en la lista lo reemplaza.
 
         // 1. Botón NUEVO: Abre la actividad del formulario
         btnNou.setOnClickListener {
@@ -32,19 +35,19 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // 2. Botón EDITAR: (Por ahora solo avisa)
-        btnEditar.setOnClickListener {
-            if (itemSeleccionado != -1) {
-                Toast.makeText(this, "Funcionalitat d'Editar pendent", Toast.LENGTH_SHORT).show()
-                // Aquí iría la lógica para abrir el formulario pasando los datos
-            }
-        }
-
-        // 3. Detectar clic en la lista para habilitar el botón Editar
+        // 2. Detectar clic en la lista para abrir la vista de detalle/edición
         listView.setOnItemClickListener { _, _, position, _ ->
-            itemSeleccionado = position
-            btnEditar.isEnabled = true
-            btnEditar.text = "EDITAR SELECCIÓ"
+            // 1. Recuperamos la línea de datos COMPLETA del contacto
+            val dadesCompletes = contactesDataList[position]
+
+            // 2. Abrimos la Activity de Detalle/Edición
+            val intent = Intent(this, DetalleContactoActivity::class.java)
+
+            // 3. Pasamos los datos completos y el índice (necesario para saber qué línea editar/borrar)
+            intent.putExtra("CONTACTE_DATA", dadesCompletes)
+            intent.putExtra("CONTACTE_INDEX", position)
+
+            startActivity(intent)
         }
     }
 
@@ -55,27 +58,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun carregarLlista() {
-        contactesList.clear() // Limpiamos la lista anterior
+        // Limpiamos las dos listas antes de volver a cargarlas
+        contactesDisplayList.clear()
+        contactesDataList.clear()
+
         try {
             val fileInputStream = openFileInput("contactes.txt")
             val reader = BufferedReader(InputStreamReader(fileInputStream))
 
             var linia = reader.readLine()
             while (linia != null) {
-                // La línea es: Nom;Cognom;Tel;Email
-                // Lo mostramos bonito en la lista reemplazando ; por espacios
-                val parts = linia.split(";")
+                val cleanLinia = linia.trim()
+
+                // 1. Guardamos la línea de datos COMPLETA
+                contactesDataList.add(cleanLinia)
+
+                // 2. Preparamos el string para la visualización
+                val parts = cleanLinia.split(";")
                 if(parts.size >= 2) {
-                    contactesList.add("${parts[0]} ${parts[1]}") // Solo mostramos nombre y apellido
+                    contactesDisplayList.add("${parts[0]} ${parts[1]}")
+                } else {
+                    contactesDisplayList.add("Contacte Invàlid")
                 }
                 linia = reader.readLine()
             }
             reader.close()
         } catch (e: Exception) {
-            // Si es la primera vez y no existe el archivo, no pasa nada
+            // El archivo no existe o está vacío. La lista se queda limpia.
         }
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, contactesList)
+        // Asignamos el adaptador con la lista para MOSTRAR
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, contactesDisplayList)
         listView.adapter = adapter
     }
 }
